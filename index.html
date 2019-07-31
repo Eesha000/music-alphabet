@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MusicBoard</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div class="container">
+	<div class="keys">
+
+		<div data-key="65" class="key" onmouseover="big()" onmouseout="back()" id='imga'>
+			<kbd>A</kbd>
+			<span class="sound">Apple</span>
+		</div>
+		<div data-key="70" class="key">
+			<kbd>F</kbd>
+			<span class="sound">Facebook</span>
+		</div>
+		<div data-key="71" class="key">
+			<kbd>G</kbd>
+			<span class="sound">Gloves</span>
+		</div>
+		<div data-key="67" class="key">
+			<kbd>C</kbd>
+			<span class="sound">cat</span>
+		</div>
+	</div>
+</div>
+	
+<!-- sound -->
+	<audio data-key="65" src="sounds/clap.wav"></audio>
+	<audio data-key="70" src="sounds/openhat.wav"></audio>
+	<audio data-key="71" src="sounds/boom.wav"></audio>
+	<audio data-key="67" src="cat.wav"></audio>
+		
+			
+<script type="text/javascript">
+	var width = 100;
+	var difference = 2;
+	var intervalId = 0;
+
+	function big() {
+		clearInterval(intervalId);
+		intervalId = setInterval(zoomIn, 10);
+	}
+
+	function back() {
+		clearInterval(intervalId);
+		intervalId = setInterval(zoomOut, 10);
+	}
+
+	function zoomIn() {
+		if(width<200) {
+			width = width + difference;
+			document.getElementById('imga').style.width = width+'px';
+		console.log(width);
+		} else  {
+			clearInterval(intervalId);
+		}
+	}
+
+	function zoomOut() {
+		if(width>100) {
+			width = width - difference;
+			document.getElementById('imga').style.width = width+'px';
+		console.log(width);
+		} else  {
+			clearInterval(intervalId);
+		}
+	}
+
+	function removeTransition(e) {
+		if (e.propertyName !== 'transform') return;
+		e.target.classList.remove('pressing');
+	}
+
+	function playSound(e) {
+		const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+		const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+		if (!audio) return;
+
+		key.classList.add('pressing');
+		audio.currentTime = 0;
+		audio.play();
+	}
+
+	const keys = Array.from(document.querySelectorAll('.key'));
+	keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+	window.addEventListener('keydown', playSound);
+</script>
+</body>
+</html>
